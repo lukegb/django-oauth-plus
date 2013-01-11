@@ -7,13 +7,17 @@ import oauth2 as oauth
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import BaseUserManager
 
 from managers import TokenManager
 from consts import KEY_SIZE, SECRET_SIZE, CONSUMER_KEY_SIZE, CONSUMER_STATES,\
                    PENDING, VERIFIER_SIZE, MAX_URL_LENGTH, OUT_OF_BAND
 from utils import check_valid_callback
 
-generate_random = get_user_model().objects.make_random_password
+def generate_random(length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'):
+    "Generates a random password with the given length and given allowed_chars"
+    from random import SystemRandom as random
+    return ''.join([random().choice(allowed_chars) for i in range(length)])
 
 class Nonce(models.Model):
     token_key = models.CharField(max_length=KEY_SIZE)
