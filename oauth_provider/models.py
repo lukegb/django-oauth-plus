@@ -124,6 +124,8 @@ class Token(models.Model):
                 query += "&%s" % urllib.urlencode(args)
             return urlparse.urlunparse((scheme, netloc, path, params,
                 query, fragment))
+        if not self.callback:
+            return OUT_OF_BAND
         args = args is not None and "?%s" % urllib.urlencode(args) or ""
         return self.callback + args
 
